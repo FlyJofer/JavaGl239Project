@@ -130,9 +130,12 @@ public class Problem {
      *
      * @param gl переменная OpenGL для рисования
      */
+
     public void render(GL2 gl) {
         for (Point point : points) {
             point.render(gl);
         }
+
+        Figures.renderLine(gl, new Vector2(0.5,0.7), new Vector2(0.0,1.0));
     }
 }
