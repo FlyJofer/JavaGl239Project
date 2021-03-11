@@ -15,16 +15,16 @@ public class Figures {
         gl.glLineWidth(8);
         gl.glBegin(GL.GL_LINES);
         gl.glVertex2d(pos.x, pos.y);
-        gl.glVertex2d(pos.x1, pos.y1);
+        gl.glVertex2d(pos.x, pos.y);
         gl.glEnd();
     }
     public static void renderTriangle(GL2 gl, Vector2 pos, float size) {
         gl.glPointSize(size);
         gl.glLineWidth(7);
         gl.glBegin(GL.GL_TRIANGLES);
-        gl.glVertex2d(pos.x3, pos.y3);
-        gl.glVertex2d(pos.x4, pos.y4);
-        gl.glVertex2d(pos.x5, pos.y5);
+        gl.glVertex2d(pos.x, pos.y);
+        gl.glVertex2d(pos.x, pos.y);
+        gl.glVertex2d(pos.x, pos.y);
         gl.glEnd();
     }
     public static void renderSquare(GL2 gl, Vector2 pos, float size) {

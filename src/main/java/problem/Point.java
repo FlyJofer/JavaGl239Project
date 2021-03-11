@@ -82,6 +82,7 @@ public class Point {
         gl.glVertex2d(x, y);
         gl.glEnd();
         gl.glPointSize(1);
+
     }
 
     /**
