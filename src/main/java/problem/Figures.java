@@ -17,15 +17,30 @@ public class Figures {
         gl.glVertex2d(posend.x, posend.y);
         gl.glEnd();
     }
-    public static void renderTriangle(GL2 gl, Vector2 pos, float size) {
-        gl.glBegin(GL.GL_TRIANGLES);
-        gl.glColor3d(0.5, 0.0, 1.0);
-        gl.glVertex2d(0, 0);
-        gl.glColor3d(0.0, 1.0, 1.0);
-        gl.glVertex2d(0.5, 0.5);
-        gl.glColor3d(0.5, 0.2, 1.0);
-        gl.glVertex2d(0.1, 0.5);
-        gl.glEnd();
+    public static void renderTriangle(GL2 gl, Vector2 pos1, Vector2 pos2, Vector2 pos3, boolean filled) {
+        if (filled) {
+            gl.glLineWidth(7);
+            gl.glBegin(GL.GL_TRIANGLES);
+            gl.glVertex2d(pos1.x, pos1.y);
+            gl.glVertex2d(pos2.x, pos2.y);
+            gl.glVertex2d(pos3.x, pos3.y);
+            gl.glEnd();
+        } else {
+            gl.glLineWidth(7);
+            gl.glBegin(GL.GL_LINES);
+            gl.glVertex2d(pos1.x, pos1.y);
+            gl.glVertex2d(pos2.x, pos2.y);
+            gl.glEnd();
+            gl.glBegin(GL.GL_LINES);
+            gl.glVertex2d(pos3.x, pos3.y);
+            gl.glVertex2d(pos2.x, pos2.y);
+            gl.glEnd();
+            gl.glBegin(GL.GL_LINES);
+            gl.glVertex2d(pos1.x, pos1.y);
+            gl.glVertex2d(pos3.x, pos3.y);
+            gl.glEnd();
+
+        }
     }
     public static void renderSquare(GL2 gl, Vector2 pos, float size) {
         gl.glPointSize(size);

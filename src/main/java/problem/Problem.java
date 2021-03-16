@@ -30,12 +30,14 @@ public class Problem {
      * список точек
      */
     private ArrayList<Point> points;
+    private ArrayList<Triangle> triangles;
 
     /**
      * Конструктор класса задачи
      */
     public Problem() {
         points = new ArrayList<>();
+        triangles = new ArrayList<>();
     }
 
     /**
@@ -115,6 +117,8 @@ public class Problem {
         for (int i = 0; i < n; i++) {
             Point p = Point.getRandomPoint();
             points.add(p);
+            Triangle t = Triangle.getRandomTriangle();
+            triangles.add(t);
         }
     }
 
@@ -132,10 +136,7 @@ public class Problem {
      */
 
     public void render(GL2 gl) {
-        for (Point point : points) {
-            point.render(gl);
-        }
-
-        Figures.renderLine(gl, new Vector2(0.5,0.7), new Vector2(0.0,1.0));
+        for (Triangle triangle : triangles)
+            triangle.render(gl);
     }
 }
