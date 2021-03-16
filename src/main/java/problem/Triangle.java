@@ -7,18 +7,13 @@ public class Triangle {
     Vector2 a;
     Vector2 b;
     Vector2 c;
-    /**
-     * x - координата точки
-     */
-    double x;
-    /**
-     * y - координата точки
-     */
-    double y;
 
-    Triangle(double x1, double y1,double x2, double y2,double x3, double y3) {
-        this.x = x;
-        this.y = y;
+
+
+    Triangle(Vector2 a,Vector2 b,Vector2 c) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
     }
 
     static Triangle getRandomTriangle() {
@@ -29,11 +24,11 @@ public class Triangle {
         double ny2 = (double) r.nextDouble()* 2 - 1;
         double nx3 = (double) r.nextDouble()* 2 - 1;
         double ny3 = (double) r.nextDouble()* 2 - 1;
-        return new Triangle(nx1, ny1,nx2,ny2,nx3,ny3);
+        return new Triangle(new Vector2(nx1,ny1),new Vector2(nx2,ny2),new Vector2(nx3,ny3));
     }
 
     public void render(GL2 gl){
-        Figures.renderTriangle(gl,a,b,c,false);
+        Figures.renderTriangle(gl,a,b,c,true);
     }
 
 }
