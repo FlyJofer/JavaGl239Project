@@ -2,13 +2,13 @@ package problem;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 public class Figures {
-    public static void renderPoint(GL2 gl, Vector2 pos, float size) {
+    public static void renderPoint(GL2 gl, Vec2 pos, float size) {
         gl.glPointSize(size);
         gl.glBegin(GL.GL_POINTS);
         gl.glVertex2d(pos.x, pos.y);
         gl.glEnd();
     }
-    public static void renderLine(GL2 gl, Vector2 posbegin,Vector2 posend) {
+    public static void renderLine(GL2 gl, Vec2 posbegin,Vec2 posend) {
         gl.glLineWidth(6);
         gl.glBegin(GL.GL_LINES);
         gl.glColor3d(1.0, 0.5, 0.0);
@@ -17,7 +17,7 @@ public class Figures {
         gl.glVertex2d(posend.x, posend.y);
         gl.glEnd();
     }
-    public static void renderTriangle(GL2 gl, Vector2 pos1, Vector2 pos2, Vector2 pos3, boolean filled) {
+    public static void renderTriangle(GL2 gl, Vec2 pos1, Vec2 pos2, Vec2 pos3, boolean filled) {
         if (filled) {
             gl.glLineWidth(7);
             gl.glBegin(GL.GL_TRIANGLES);
@@ -42,13 +42,13 @@ public class Figures {
 
         }
     }
-    public static void renderSquare(GL2 gl, Vector2 pos, float size) {
+    public static void renderSquare(GL2 gl, Vec2 pos, float size) {
         gl.glPointSize(size);
         gl.glBegin(GL.GL_POINTS);
         gl.glVertex2d(pos.x, pos.y);
         gl.glEnd();
     }
-    public static void renderCircle(GL2 gl, Vector2 pos, float size) {
+    public static void renderCircle(GL2 gl, Vec2 pos, float size) {
         gl.glColor3f(0.0f,1.0f,0.0f);
         gl.glBegin(GL.GL_LINE_LOOP);
         float a;
