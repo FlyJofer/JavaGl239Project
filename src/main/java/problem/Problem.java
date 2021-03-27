@@ -3,141 +3,152 @@ package problem;
 import javax.media.opengl.GL2;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-/**
- * Класс задачи
- */
+import static problem.TriangleType.*;
+
 public class Problem {
-    /**
-     * текст задачи
-     */
     public static final String PROBLEM_TEXT = "ПОСТАНОВКА ЗАДАЧИ:\n" +
             "На плоскости задано множество треугольников. Найти такие два треугольника, что\n" +
             "площадь фигуры, находящейся внутри обоих треугольников, будет максимальна.";
 
-    /**
-     * заголовок окна
-     */
-    public static final String PROBLEM_CAPTION = "Итоговый проект ученика 10-7 Иванова Ивана";
+    public static final String PROBLEM_CAPTION = "Итоговый проект ученика Всеволода Колпачкова (10-2)";
 
-    /**
-     * путь к файлу
-     */
-    private static final String FILE_NAME = "points.txt";
+    private static final String POLYGON_FILE_NAME = "polygon.txt";
+    private static final String TRIANGLES_FILE_NAME = "triangles.txt";
 
-    /**
-     * список точек
-     */
-    private ArrayList<Point> points;
-    private ArrayList<Triangle> triangles;
+    private final ArrayList<Triangle> triangles;
+    Polygon polygon;
 
-    /**
-     * Конструктор класса задачи
-     */
     public Problem() {
-        points = new ArrayList<>();
         triangles = new ArrayList<>();
+        polygon = new Polygon();
     }
 
-    /**
-     * Добавить точку
-     *
-     * @param x      координата X точки
-     * @param y      координата Y точки
-     * @param setVal номер множества
-     */
-    public void addPoint(double x, double y, int setVal) {
-        Point point = new Point(x, y, setVal);
-        points.add(point);
+    public void addTriangle(double x1, double y1, double x2, double y2, double x3, double y3) {
+        triangles.add(new Triangle(new Vec2(x1, y1), new Vec2(x2, y2), new Vec2(x3, y3)));
     }
 
-    /**
-     * Решить задачу
-     */
     public void solve() {
-        // перебираем пары точек
-        for (Point p : points) {
-            for (Point p2 : points) {
-                // если точки являются разными
-                if (p != p2) {
-                    // если координаты у них совпадают
-                    if (Math.abs(p.x - p2.x) < 0.0001 && Math.abs(p.y - p2.y) < 0.0001) {
-                        p.isSolution = true;
-                        p2.isSolution = true;
-                    }
+        Triangle tri1 = new Triangle(), tri2 = new Triangle();
+
+        for (Triangle tri : triangles)
+            tri.setType(UNUSED);
+
+        for (Triangle first : triangles) {
+            for (Triangle second : triangles)
+            {
+                if (first == second)
+                    continue;
+
+                Polygon p = first.intersect(second);
+                if (p.area > polygon.area) {
+                    polygon = p;
+                    tri1 = first;
+                    tri2 = second;
                 }
             }
         }
+
+        for (Triangle tri : triangles)
+            if (tri == tri1 || tri == tri2)
+                tri.setType(CHOOSEN);
     }
 
-    /**
-     * Загрузить задачу из файла
-     */
     public void loadFromFile() {
-        points.clear();
+        clear();
+
+        // Загрузка треугольников
         try {
-            File file = new File(FILE_NAME);
+            File file = new File(TRIANGLES_FILE_NAME);
             Scanner sc = new Scanner(file);
-            // пока в файле есть непрочитанные строки
             while (sc.hasNextLine()) {
-                double x = sc.nextDouble();
-                double y = sc.nextDouble();
-                int setVal = sc.nextInt();
+                Triangle tri = new Triangle(
+                        new Vec2(sc.nextDouble(), sc.nextDouble()),
+                        new Vec2(sc.nextDouble(), sc.nextDouble()),
+                        new Vec2(sc.nextDouble(), sc.nextDouble())
+                );
+
                 sc.nextLine();
-                Point point = new Point(x, y, setVal);
-                points.add(point);
+
+                tri.setType(TriangleType.valueOf(sc.nextLine()));
+                triangles.add(tri);
+            }
+        } catch (Exception ex) {
+            System.out.println("Ошибка чтения из файла: " + ex);
+        }
+
+        // Загрузка полигона
+        try {
+            File file = new File(POLYGON_FILE_NAME);
+            Scanner sc = new Scanner(file);
+            while (sc.hasNextLine()) {
+                polygon.points.add(new Vec2(sc.nextDouble(), sc.nextDouble()));
+                sc.nextLine();
             }
         } catch (Exception ex) {
             System.out.println("Ошибка чтения из файла: " + ex);
         }
     }
 
-    /**
-     * Сохранить задачу в файл
-     */
     public void saveToFile() {
+        // Сохранение треугольников
         try {
-            PrintWriter out = new PrintWriter(new FileWriter(FILE_NAME));
-            for (Point point : points) {
-                out.printf("%.2f %.2f %d\n", point.x, point.y, point.setNumber);
+            PrintWriter out = new PrintWriter(new FileWriter(TRIANGLES_FILE_NAME));
+            for (Triangle tri : triangles) {
+                for (Vec2 point : tri.points)
+                    out.printf("%.4f %.4f ", point.x, point.y);
+                out.printf("\n");
+
+                out.println(tri.type);
             }
+
+            out.close();
+        } catch (IOException ex) {
+            System.out.println("Ошибка записи в файл: " + ex);
+        }
+
+        // Сохранение полигона
+        try {
+            PrintWriter out = new PrintWriter(new FileWriter(POLYGON_FILE_NAME));
+            for (Vec2 point : polygon.points)
+                out.printf("%.4f %.4f\n", point.x, point.y);
+
             out.close();
         } catch (IOException ex) {
             System.out.println("Ошибка записи в файл: " + ex);
         }
     }
 
-    /**
-     * Добавить заданное число случайных точек
-     *
-     * @param n кол-во точек
-     */
-    public void addRandomPoints(int n) {
+    public void addRandomTriangles(int n) {
+        polygon = new Polygon();
+        for (Triangle tri : triangles)
+            tri.setType(UNKNOWN);
+
+
         for (int i = 0; i < n; i++) {
-            Point p = Point.getRandomPoint();
-            points.add(p);
-            Triangle t = Triangle.getRandomTriangle();
-            triangles.add(t);
+            Triangle tri = new Triangle();
+            tri.randomize();
+
+            triangles.add(tri);
         }
     }
 
-    /**
-     * Очистить задачу
-     */
     public void clear() {
-        points.clear();
         triangles.clear();
+        polygon = new Polygon();
     }
 
-    /**
-     * Нарисовать задачу
-     *
-     * @param gl переменная OpenGL для рисования
-     */
-
     public void render(GL2 gl) {
-        for (Triangle triangle : triangles)
-            triangle.render(gl);
+        for (Triangle tri : triangles)
+            if (tri.type != CHOOSEN)
+                tri.render(gl);
+
+        for (Triangle tri : triangles)
+            if (tri.type == CHOOSEN)
+                tri.render(gl);
+
+        polygon.render(gl);
     }
 }
