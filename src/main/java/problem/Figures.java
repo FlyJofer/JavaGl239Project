@@ -42,11 +42,35 @@ public class Figures {
 
         }
     }
-    public static void renderSquare(GL2 gl, Vec2 pos, float size) {
-        gl.glPointSize(size);
-        gl.glBegin(GL.GL_POINTS);
-        gl.glVertex2d(pos.x, pos.y);
-        gl.glEnd();
+    public static void renderSquare(GL2 gl, Vec2 pos1, Vec2 pos2, Vec2 pos3, Vec2 pos4, boolean filled) {
+        if (filled) {
+            gl.glLineWidth(7);
+            gl.glBegin(GL.GL_TRIANGLES);
+            gl.glVertex2d(pos1.x, pos1.y);
+            gl.glVertex2d(pos2.x, pos2.y);
+            gl.glVertex2d(pos3.x, pos3.y);
+            gl.glVertex2d(pos4.x, pos4.y);
+            gl.glEnd();
+        } else {
+            gl.glLineWidth(7);
+            gl.glBegin(GL.GL_LINES);
+            gl.glVertex2d(pos1.x, pos1.y);
+            gl.glVertex2d(pos2.x, pos2.y);
+            gl.glEnd();
+            gl.glBegin(GL.GL_LINES);
+            gl.glVertex2d(pos2.x, pos2.y);
+            gl.glVertex2d(pos3.x, pos3.y);
+            gl.glEnd();
+            gl.glBegin(GL.GL_LINES);
+            gl.glVertex2d(pos3.x, pos3.y);
+            gl.glVertex2d(pos4.x, pos4.y);
+            gl.glEnd();
+            gl.glBegin(GL.GL_LINES);
+            gl.glVertex2d(pos4.x, pos4.y);
+            gl.glVertex2d(pos1.x, pos1.y);
+            gl.glEnd();
+
+        }
     }
     public static void renderCircle(GL2 gl, Vec2 pos, float size) {
         gl.glColor3f(0.0f,1.0f,0.0f);
